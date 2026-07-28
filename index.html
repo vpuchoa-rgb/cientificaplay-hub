@@ -43,7 +43,7 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 1s ease-out, visibility 1s ease-out;
+      transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
     }
 
     #intro-screen.fade-out {
@@ -53,7 +53,8 @@
 
     .logo-container {
       position: relative;
-      animation: logoReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      /* Transição mais gradual e suave (3.8s) */
+      animation: logoReveal 3.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
       text-align: center;
     }
 
@@ -76,20 +77,20 @@
       height: 320px;
       background: radial-gradient(circle, rgba(234, 179, 8, 0.35) 0%, rgba(249, 115, 22, 0.15) 40%, transparent 70%);
       border-radius: 50%;
-      animation: pulseGlow 2s infinite alternate;
+      animation: pulseGlow 3s infinite alternate;
       z-index: -1;
     }
 
     @keyframes logoReveal {
       0% {
         opacity: 0;
-        transform: scale(0.7) translateY(20px);
-        filter: blur(10px) brightness(0.5);
+        transform: scale(0.6) translateY(30px);
+        filter: blur(12px) brightness(0.3);
       }
-      50% {
+      40% {
         opacity: 1;
-        transform: scale(1.05) translateY(0);
-        filter: blur(0px) brightness(1.2);
+        transform: scale(1.02) translateY(0);
+        filter: blur(0px) brightness(1.1);
       }
       100% {
         opacity: 1;
@@ -99,8 +100,8 @@
     }
 
     @keyframes pulseGlow {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.3; }
+      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
     }
 
     /* --- CONTEÚDO PRINCIPAL (HUB) --- */
@@ -110,7 +111,7 @@
       max-width: 600px;
       opacity: 0;
       transform: translateY(20px);
-      animation: fadeInUp 0.8s ease-out 2.2s forwards;
+      animation: fadeInUp 1s ease-out 4s forwards;
     }
 
     .header-logo {
@@ -142,7 +143,7 @@
       max-width: 1100px;
       opacity: 0;
       transform: translateY(20px);
-      animation: fadeInUp 0.8s ease-out 2.5s forwards;
+      animation: fadeInUp 1s ease-out 4.2s forwards;
     }
 
     .card {
@@ -288,11 +289,14 @@
 
   <script>
     function playCinematicSound() {
-      const audio = new Audio('intro.m4a');
-      audio.volume = 0.8;
-      audio.play().catch(() => {
-        console.log("Áudio aguardando primeira interação do usuário.");
-      });
+      // Pequeno atraso (500ms) para sincronizar melhor com o surgimento da imagem
+      setTimeout(() => {
+        const audio = new Audio('intro.m4a');
+        audio.volume = 0.8;
+        audio.play().catch(() => {
+          console.log("Áudio aguardando primeira interação do usuário.");
+        });
+      }, 500);
     }
 
     function runIntro() {
@@ -301,9 +305,10 @@
       
       playCinematicSound();
 
+      // Transição estendida para 4.5s
       setTimeout(() => {
         intro.classList.add('fade-out');
-      }, 2400);
+      }, 4500);
     }
 
     window.addEventListener('DOMContentLoaded', runIntro);
