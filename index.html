@@ -4,10 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CientíficaPlay - Hub Educacional</title>
-
-  <!-- Biblioteca leve de Confete (estilo Vercel Deploy) -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
   <style>
     :root {
       --bg: #09090b;
@@ -34,21 +30,20 @@
       overflow-x: hidden;
     }
 
-    /* --- INTRO CINEMATOGRÁFICA + AMBILIGHT VERCEL --- */
+    /* --- INTRO CINEMATOGRÁFICA (AUTOMÁTICA) --- */
     #intro-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: #09090b;
+      background: radial-gradient(circle at center, #18181b 0%, #09090b 80%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
       transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
-      overflow: hidden;
     }
 
     #intro-screen.fade-out {
@@ -56,27 +51,9 @@
       visibility: hidden;
     }
 
-    /* Efeito Ambilight Vivo no Fundo */
-    .ambilight-bg {
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(14, 165, 233, 0.4) 0%, rgba(249, 115, 22, 0.3) 40%, rgba(234, 179, 8, 0.2) 70%, transparent 100%);
-      border-radius: 50%;
-      filter: blur(80px);
-      animation: ambilightMove 6s infinite alternate ease-in-out;
-      z-index: 1;
-    }
-
-    @keyframes ambilightMove {
-      0% { transform: scale(0.8) translate(-10%, -10%); opacity: 0.5; }
-      50% { transform: scale(1.2) translate(10%, 5%); opacity: 0.95; }
-      100% { transform: scale(1) translate(-5%, 10%); opacity: 0.7; }
-    }
-
     .logo-container {
       position: relative;
-      z-index: 2;
+      /* Entrada bem suave de 3.8s */
       animation: logoReveal 3.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
       text-align: center;
     }
@@ -86,8 +63,21 @@
       width: 80vw;
       height: auto;
       border-radius: 1.5rem;
-      box-shadow: 0 0 60px rgba(14, 165, 233, 0.3);
-      filter: drop-shadow(0 0 30px rgba(249, 115, 22, 0.4));
+      box-shadow: 0 0 50px rgba(14, 165, 233, 0.2);
+      filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.3));
+    }
+
+    .light-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(234, 179, 8, 0.35) 0%, rgba(249, 115, 22, 0.15) 40%, transparent 70%);
+      border-radius: 50%;
+      animation: pulseGlow 3s infinite alternate;
+      z-index: -1;
     }
 
     @keyframes logoReveal {
@@ -99,13 +89,18 @@
       45% {
         opacity: 1;
         transform: scale(1.02) translateY(0);
-        filter: blur(0px) brightness(1.15);
+        filter: blur(0px) brightness(1.1);
       }
       100% {
         opacity: 1;
         transform: scale(1) translateY(0);
         filter: blur(0px) brightness(1);
       }
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.3; }
+      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
     }
 
     /* --- CONTEÚDO PRINCIPAL (HUB) --- */
@@ -230,7 +225,7 @@
 
   <!-- TELA DE ABERTURA -->
   <div id="intro-screen">
-    <div class="ambilight-bg"></div>
+    <div class="light-glow"></div>
     <div class="logo-container">
       <img src="logo.jpg" alt="CientíficaPlay Logo" class="logo-img">
     </div>
@@ -292,25 +287,14 @@
   </footer>
 
   <script>
-    // Dispara a explosão de confetes estilo Vercel
-    function triggerVercelConfetti() {
-      setTimeout(() => {
-        if (typeof confetti === 'function') {
-          confetti({
-            particleCount: 70,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#0ea5e9', '#f97316', '#eab308', '#ffffff']
-          });
-        }
-      }, 1000);
-    }
-
     function playCinematicSound() {
+      // Atraso intencional de 800ms para encaixar perfeitamente com a revelação da logo
       setTimeout(() => {
         const audio = new Audio('intro.m4a');
         audio.volume = 0.8;
-        audio.play().catch(() => {});
+        audio.play().catch(() => {
+          console.log("Aviso: O navegador aguarda uma primeira interacao do usuario para liberar o audio.");
+        });
       }, 800);
     }
 
@@ -319,8 +303,8 @@
       intro.classList.remove('fade-out');
       
       playCinematicSound();
-      triggerVercelConfetti();
 
+      // Esconde a intro após 4.5s
       setTimeout(() => {
         intro.classList.add('fade-out');
       }, 4500);
