@@ -211,26 +211,6 @@
       padding-top: 3rem;
       color: var(--text-muted);
       font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-replay {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-replay:hover {
-      color: var(--text);
-      border-color: var(--accent-blue);
     }
 
     @keyframes fadeInUp {
@@ -303,56 +283,18 @@
   </main>
 
   <footer>
-    <button class="btn-replay" onclick="replayIntro()"> Ver Intro Novamente</button>
     <p>&copy; CientíficaPlay. Todos os direitos reservados.</p>
   </footer>
 
   <script>
-    // Sintetiza um efeito sonoro cinematográfico via Web Audio API
     function playCinematicSound() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-
-        // Impacto Sub-grave
-        const subOsc = ctx.createOscillator();
-        const subGain = ctx.createGain();
-        subOsc.type = 'sine';
-        subOsc.frequency.setValueAtTime(120, ctx.currentTime);
-        subOsc.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 1.2);
-        
-        subGain.gain.setValueAtTime(0.6, ctx.currentTime);
-        subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
-
-        subOsc.connect(subGain);
-        subGain.connect(ctx.destination);
-        subOsc.start();
-        subOsc.stop(ctx.currentTime + 1.5);
-
-        // Brilho de Surgimento (Chime)
-        setTimeout(() => {
-          const chimeOsc = ctx.createOscillator();
-          const chimeGain = ctx.createGain();
-          chimeOsc.type = 'triangle';
-          chimeOsc.frequency.setValueAtTime(523.25, ctx.currentTime);
-          chimeOsc.frequency.exponentialRampToValueAtTime(1046.50, ctx.currentTime + 0.8);
-          
-          chimeGain.gain.setValueAtTime(0.2, ctx.currentTime);
-          chimeGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-
-          chimeOsc.connect(chimeGain);
-          chimeGain.connect(ctx.destination);
-          chimeOsc.start();
-          chimeOsc.stop(ctx.currentTime + 1.2);
-        }, 300);
-
-      } catch (e) {
-        console.log("Áudio bloqueado até interação do usuário.");
-      }
+      const audio = new Audio('intro.m4a');
+      audio.volume = 0.8;
+      audio.play().catch(() => {
+        console.log("Áudio aguardando primeira interação do usuário.");
+      });
     }
 
-    // Executa a animação e o som
     function runIntro() {
       const intro = document.getElementById('intro-screen');
       intro.classList.remove('fade-out');
@@ -362,11 +304,6 @@
       setTimeout(() => {
         intro.classList.add('fade-out');
       }, 2400);
-    }
-
-    function replayIntro() {
-      window.scrollTo(0, 0);
-      runIntro();
     }
 
     window.addEventListener('DOMContentLoaded', runIntro);
