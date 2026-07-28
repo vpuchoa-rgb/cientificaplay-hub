@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CientíficaPlay - Hub Educacional</title>
+
+  <!-- Biblioteca leve de Confete (estilo Vercel Deploy) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
     :root {
       --bg: #09090b;
@@ -30,20 +34,21 @@
       overflow-x: hidden;
     }
 
-    /* --- INTRO CINEMATOGRÁFICA --- */
+    /* --- INTRO CINEMATOGRÁFICA + AMBILIGHT VERCEL --- */
     #intro-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, #18181b 0%, #09090b 80%);
+      background: #09090b;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
       transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
+      overflow: hidden;
     }
 
     #intro-screen.fade-out {
@@ -51,33 +56,29 @@
       visibility: hidden;
     }
 
-    .start-btn {
-      background: linear-gradient(135deg, #f97316, #ea580c);
-      color: #fff;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 1rem 2rem;
-      border-radius: 2rem;
-      cursor: pointer;
-      box-shadow: 0 0 30px rgba(249, 115, 22, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+    /* Efeito Ambilight Vivo no Fundo */
+    .ambilight-bg {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.4) 0%, rgba(249, 115, 22, 0.3) 40%, rgba(234, 179, 8, 0.2) 70%, transparent 100%);
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: ambilightMove 6s infinite alternate ease-in-out;
+      z-index: 1;
     }
 
-    .start-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 45px rgba(249, 115, 22, 0.6);
+    @keyframes ambilightMove {
+      0% { transform: scale(0.8) translate(-10%, -10%); opacity: 0.5; }
+      50% { transform: scale(1.2) translate(10%, 5%); opacity: 0.95; }
+      100% { transform: scale(1) translate(-5%, 10%); opacity: 0.7; }
     }
 
     .logo-container {
       position: relative;
-      display: none; /* Inicia oculto até o clique */
-      text-align: center;
-    }
-
-    .logo-container.animate {
-      display: block;
+      z-index: 2;
       animation: logoReveal 3.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      text-align: center;
     }
 
     .logo-img {
@@ -85,21 +86,8 @@
       width: 80vw;
       height: auto;
       border-radius: 1.5rem;
-      box-shadow: 0 0 50px rgba(14, 165, 233, 0.2);
-      filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.3));
-    }
-
-    .light-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(234, 179, 8, 0.35) 0%, rgba(249, 115, 22, 0.15) 40%, transparent 70%);
-      border-radius: 50%;
-      animation: pulseGlow 3s infinite alternate;
-      z-index: -1;
+      box-shadow: 0 0 60px rgba(14, 165, 233, 0.3);
+      filter: drop-shadow(0 0 30px rgba(249, 115, 22, 0.4));
     }
 
     @keyframes logoReveal {
@@ -108,21 +96,16 @@
         transform: scale(0.6) translateY(30px);
         filter: blur(12px) brightness(0.3);
       }
-      40% {
+      45% {
         opacity: 1;
         transform: scale(1.02) translateY(0);
-        filter: blur(0px) brightness(1.1);
+        filter: blur(0px) brightness(1.15);
       }
       100% {
         opacity: 1;
         transform: scale(1) translateY(0);
         filter: blur(0px) brightness(1);
       }
-    }
-
-    @keyframes pulseGlow {
-      0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.3; }
-      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
     }
 
     /* --- CONTEÚDO PRINCIPAL (HUB) --- */
@@ -132,10 +115,7 @@
       max-width: 600px;
       opacity: 0;
       transform: translateY(20px);
-    }
-
-    header.visible {
-      animation: fadeInUp 1s ease-out forwards;
+      animation: fadeInUp 1s ease-out 4s forwards;
     }
 
     .header-logo {
@@ -167,10 +147,7 @@
       max-width: 1100px;
       opacity: 0;
       transform: translateY(20px);
-    }
-
-    .grid.visible {
-      animation: fadeInUp 1s ease-out 0.2s forwards;
+      animation: fadeInUp 1s ease-out 4.2s forwards;
     }
 
     .card {
@@ -253,22 +230,20 @@
 
   <!-- TELA DE ABERTURA -->
   <div id="intro-screen">
-    <button id="start-btn" class="start-btn" onclick="startExperience()">Entrar na CientíficaPlay</button>
-    
-    <div id="logo-container" class="logo-container">
-      <div class="light-glow"></div>
+    <div class="ambilight-bg"></div>
+    <div class="logo-container">
       <img src="logo.jpg" alt="CientíficaPlay Logo" class="logo-img">
     </div>
   </div>
 
   <!-- CONTEÚDO PRINCIPAL DO HUB -->
-  <header id="main-header">
+  <header>
     <img src="logo.jpg" alt="CientíficaPlay" class="header-logo">
     <h1>CientíficaPlay</h1>
     <p>Plataforma Gamificada de Ensino em Saúde e Ciências.</p>
   </header>
 
-  <main id="main-grid" class="grid">
+  <main class="grid">
 
     <!-- Card 1: Simulador 3D -->
     <div class="card">
@@ -317,29 +292,41 @@
   </footer>
 
   <script>
-    function startExperience() {
-      const startBtn = document.getElementById('start-btn');
-      const logoContainer = document.getElementById('logo-container');
-      const introScreen = document.getElementById('intro-screen');
-      const header = document.getElementById('main-header');
-      const grid = document.getElementById('main-grid');
-
-      // Oculta o botão e revela a logo
-      startBtn.style.display = 'none';
-      logoContainer.classList.add('animate');
-
-      // Toca o áudio (autorizado pelo clique prévio)
-      const audio = new Audio('intro.m4a');
-      audio.volume = 0.8;
-      audio.play().catch(err => console.log("Erro de áudio:", err));
-
-      // Finaliza a intro após 4.2s
+    // Dispara a explosão de confetes estilo Vercel
+    function triggerVercelConfetti() {
       setTimeout(() => {
-        introScreen.classList.add('fade-out');
-        header.classList.add('visible');
-        grid.classList.add('visible');
-      }, 4200);
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 70,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ['#0ea5e9', '#f97316', '#eab308', '#ffffff']
+          });
+        }
+      }, 1000);
     }
+
+    function playCinematicSound() {
+      setTimeout(() => {
+        const audio = new Audio('intro.m4a');
+        audio.volume = 0.8;
+        audio.play().catch(() => {});
+      }, 800);
+    }
+
+    function runIntro() {
+      const intro = document.getElementById('intro-screen');
+      intro.classList.remove('fade-out');
+      
+      playCinematicSound();
+      triggerVercelConfetti();
+
+      setTimeout(() => {
+        intro.classList.add('fade-out');
+      }, 4500);
+    }
+
+    window.addEventListener('DOMContentLoaded', runIntro);
   </script>
 
 </body>
