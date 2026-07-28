@@ -30,7 +30,7 @@
       overflow-x: hidden;
     }
 
-    /* --- INTRO CINEMATOGRÁFICA (DISNEY+ STYLE) --- */
+    /* --- INTRO CINEMATOGRÁFICA --- */
     #intro-screen {
       position: fixed;
       top: 0;
@@ -51,11 +51,33 @@
       visibility: hidden;
     }
 
+    .start-btn {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 1rem 2rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(249, 115, 22, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .start-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 45px rgba(249, 115, 22, 0.6);
+    }
+
     .logo-container {
       position: relative;
-      /* Transição mais gradual e suave (3.8s) */
-      animation: logoReveal 3.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      display: none; /* Inicia oculto até o clique */
       text-align: center;
+    }
+
+    .logo-container.animate {
+      display: block;
+      animation: logoReveal 3.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
     .logo-img {
@@ -67,7 +89,6 @@
       filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.3));
     }
 
-    /* Feixe de luz de fundo */
     .light-glow {
       position: absolute;
       top: 50%;
@@ -111,7 +132,10 @@
       max-width: 600px;
       opacity: 0;
       transform: translateY(20px);
-      animation: fadeInUp 1s ease-out 4s forwards;
+    }
+
+    header.visible {
+      animation: fadeInUp 1s ease-out forwards;
     }
 
     .header-logo {
@@ -143,7 +167,10 @@
       max-width: 1100px;
       opacity: 0;
       transform: translateY(20px);
-      animation: fadeInUp 1s ease-out 4.2s forwards;
+    }
+
+    .grid.visible {
+      animation: fadeInUp 1s ease-out 0.2s forwards;
     }
 
     .card {
@@ -224,22 +251,24 @@
 </head>
 <body>
 
-  <!-- TELA DE ABERTURA (INTRO CINEMATOGRÁFICA) -->
+  <!-- TELA DE ABERTURA -->
   <div id="intro-screen">
-    <div class="light-glow"></div>
-    <div class="logo-container">
+    <button id="start-btn" class="start-btn" onclick="startExperience()">Entrar na CientíficaPlay</button>
+    
+    <div id="logo-container" class="logo-container">
+      <div class="light-glow"></div>
       <img src="logo.jpg" alt="CientíficaPlay Logo" class="logo-img">
     </div>
   </div>
 
   <!-- CONTEÚDO PRINCIPAL DO HUB -->
-  <header>
+  <header id="main-header">
     <img src="logo.jpg" alt="CientíficaPlay" class="header-logo">
     <h1>CientíficaPlay</h1>
     <p>Plataforma Gamificada de Ensino em Saúde e Ciências.</p>
   </header>
 
-  <main class="grid">
+  <main id="main-grid" class="grid">
 
     <!-- Card 1: Simulador 3D -->
     <div class="card">
@@ -288,30 +317,29 @@
   </footer>
 
   <script>
-    function playCinematicSound() {
-      // Pequeno atraso (500ms) para sincronizar melhor com o surgimento da imagem
+    function startExperience() {
+      const startBtn = document.getElementById('start-btn');
+      const logoContainer = document.getElementById('logo-container');
+      const introScreen = document.getElementById('intro-screen');
+      const header = document.getElementById('main-header');
+      const grid = document.getElementById('main-grid');
+
+      // Oculta o botão e revela a logo
+      startBtn.style.display = 'none';
+      logoContainer.classList.add('animate');
+
+      // Toca o áudio (autorizado pelo clique prévio)
+      const audio = new Audio('intro.m4a');
+      audio.volume = 0.8;
+      audio.play().catch(err => console.log("Erro de áudio:", err));
+
+      // Finaliza a intro após 4.2s
       setTimeout(() => {
-        const audio = new Audio('intro.m4a');
-        audio.volume = 0.8;
-        audio.play().catch(() => {
-          console.log("Áudio aguardando primeira interação do usuário.");
-        });
-      }, 500);
+        introScreen.classList.add('fade-out');
+        header.classList.add('visible');
+        grid.classList.add('visible');
+      }, 4200);
     }
-
-    function runIntro() {
-      const intro = document.getElementById('intro-screen');
-      intro.classList.remove('fade-out');
-      
-      playCinematicSound();
-
-      // Transição estendida para 4.5s
-      setTimeout(() => {
-        intro.classList.add('fade-out');
-      }, 4500);
-    }
-
-    window.addEventListener('DOMContentLoaded', runIntro);
   </script>
 
 </body>
