@@ -43,7 +43,8 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+      /* Transição de saída rápida e suave */
+      transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
     }
 
     #intro-screen.fade-out {
@@ -64,7 +65,7 @@
     }
 
     .logo-wrapper:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
 
     .logo-img {
@@ -74,7 +75,7 @@
       border-radius: 1.5rem;
       box-shadow: 0 0 30px rgba(14, 165, 233, 0.2);
       filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.3));
-      transition: filter 0.3s ease, box-shadow 0.3s ease;
+      transition: filter 0.2s ease, box-shadow 0.2s ease;
     }
 
     /* Feixe de luz de fundo */
@@ -89,17 +90,17 @@
       border-radius: 50%;
       animation: pulseGlow 3s infinite alternate;
       z-index: -1;
-      transition: transform 0.4s ease, opacity 0.4s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
     /* Efeito de acender imediato ao clicar */
     .logo-wrapper.active .logo-img {
-      box-shadow: 0 0 90px rgba(14, 165, 233, 0.7);
-      filter: drop-shadow(0 0 45px rgba(249, 115, 22, 0.9)) brightness(1.25);
+      box-shadow: 0 0 90px rgba(14, 165, 233, 0.8);
+      filter: drop-shadow(0 0 50px rgba(249, 115, 22, 1)) brightness(1.3);
     }
 
     .logo-wrapper.active .light-glow {
-      transform: translate(-50%, -50%) scale(1.7);
+      transform: translate(-50%, -50%) scale(1.8);
       opacity: 1;
     }
 
@@ -118,7 +119,7 @@
     }
 
     header.visible {
-      animation: fadeInUp 0.8s ease-out forwards;
+      animation: fadeInUp 0.6s ease-out forwards;
     }
 
     .header-logo {
@@ -153,7 +154,7 @@
     }
 
     .grid.visible {
-      animation: fadeInUp 0.8s ease-out 0.15s forwards;
+      animation: fadeInUp 0.6s ease-out 0.1s forwards;
     }
 
     .card {
@@ -309,20 +310,20 @@
       const header = document.getElementById('main-header');
       const grid = document.getElementById('main-grid');
 
-      // Toca o áudio no EXATO instante do clique
+      // Executa o áudio instantaneamente no clique
       const audio = new Audio('intro.m4a');
       audio.volume = 0.9;
       audio.play().catch(err => console.log("Erro de áudio:", err));
 
-      // Aplica o efeito de acendimento instantâneo
+      // Acendimento imediato da imagem
       logoWrapper.classList.add('active');
 
-      // Transição direta e fluida (2.5 segundos)
+      // Esvai a intro em 1.2s para transição imediata e fluida
       setTimeout(() => {
         introScreen.classList.add('fade-out');
         header.classList.add('visible');
         grid.classList.add('visible');
-      }, 2500);
+      }, 1200);
     }
   </script>
 
