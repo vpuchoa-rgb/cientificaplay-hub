@@ -11,8 +11,9 @@
       --border: #27272a;
       --text: #f4f4f5;
       --text-muted: #a1a1aa;
-      --accent: #f59e0b;
-      --accent-hover: #d97706;
+      --accent-blue: #0ea5e9;
+      --accent-orange: #f97316;
+      --accent-yellow: #eab308;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,24 +27,111 @@
       flex-direction: column;
       align-items: center;
       padding: 2rem 1rem;
+      overflow-x: hidden;
     }
 
+    /* --- INTRO CINEMATOGRÁFICA (DISNEY+ STYLE) --- */
+    #intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #18181b 0%, #09090b 80%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 1s ease-out, visibility 1s ease-out;
+    }
+
+    #intro-screen.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .logo-container {
+      position: relative;
+      animation: logoReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      text-align: center;
+    }
+
+    .logo-img {
+      max-width: 280px;
+      width: 80vw;
+      height: auto;
+      border-radius: 1.5rem;
+      box-shadow: 0 0 50px rgba(14, 165, 233, 0.2);
+      filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.3));
+    }
+
+    /* Feixe de luz de fundo */
+    .light-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(234, 179, 8, 0.35) 0%, rgba(249, 115, 22, 0.15) 40%, transparent 70%);
+      border-radius: 50%;
+      animation: pulseGlow 2s infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes logoReveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.7) translateY(20px);
+        filter: blur(10px) brightness(0.5);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05) translateY(0);
+        filter: blur(0px) brightness(1.2);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0px) brightness(1);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    }
+
+    /* --- CONTEÚDO PRINCIPAL (HUB) --- */
     header {
       text-align: center;
       margin-bottom: 3rem;
       max-width: 600px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 2.2s forwards;
+    }
+
+    .header-logo {
+      max-width: 180px;
+      margin-bottom: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
     header h1 {
-      font-size: 2.5rem;
-      color: var(--accent);
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #0ea5e9, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 0.5rem;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.03em;
     }
 
     header p {
       color: var(--text-muted);
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     .grid {
@@ -52,6 +140,9 @@
       gap: 1.5rem;
       width: 100%;
       max-width: 1100px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 2.5s forwards;
     }
 
     .card {
@@ -62,12 +153,13 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
+      transform: translateY(-5px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
     }
 
     .card-tag {
@@ -75,7 +167,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--accent);
+      color: var(--accent-orange);
       margin-bottom: 0.5rem;
     }
 
@@ -94,21 +186,22 @@
     .card a {
       display: inline-block;
       text-align: center;
-      background-color: var(--accent);
-      color: #000;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
       font-weight: 600;
-      padding: 0.6rem 1rem;
+      padding: 0.7rem 1rem;
       border-radius: 0.5rem;
       text-decoration: none;
-      transition: background 0.2s;
+      transition: transform 0.2s, opacity 0.2s;
     }
 
     .card a:hover {
-      background-color: var(--accent-hover);
+      opacity: 0.9;
+      transform: scale(1.02);
     }
 
     .card a.disabled {
-      background-color: #27272a;
+      background: #27272a;
       color: #71717a;
       cursor: not-allowed;
     }
@@ -118,14 +211,51 @@
       padding-top: 3rem;
       color: var(--text-muted);
       font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-replay {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-replay:hover {
+      color: var(--text);
+      border-color: var(--accent-blue);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- TELA DE ABERTURA (INTRO CINEMATOGRÁFICA) -->
+  <div id="intro-screen">
+    <div class="light-glow"></div>
+    <div class="logo-container">
+      <img src="logo.jpg" alt="CientíficaPlay Logo" class="logo-img">
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL DO HUB -->
   <header>
+    <img src="logo.jpg" alt="CientíficaPlay" class="header-logo">
     <h1>CientíficaPlay</h1>
-    <p>Plataforma interativa de simulação e aprendizado para saúde e ciências.</p>
+    <p>Plataforma Gamificada de Ensino em Saúde e Ciências.</p>
   </header>
 
   <main class="grid">
@@ -147,7 +277,7 @@
         <h2>Gramcity RPG</h2>
         <p>Aventura pedagógica em estilo clássico para exploração de casos, tomada de decisão e fixação de conceitos práticos.</p>
       </div>
-     <a href="https://gramcity-rpg.vercel.app" target="_blank">Acessar RPG</a>
+      <a href="https://gramcity-rpg.vercel.app" target="_blank">Acessar RPG</a>
     </div>
 
     <!-- Card 3: Match Científico -->
@@ -173,8 +303,29 @@
   </main>
 
   <footer>
+    <button class="btn-replay" onclick="replayIntro()"> Ver Intro Novamente</button>
     <p>&copy; CientíficaPlay. Todos os direitos reservados.</p>
   </footer>
+
+  <script>
+    // Gerencia a transição automática da intro de abertura
+    function runIntro() {
+      const intro = document.getElementById('intro-screen');
+      intro.classList.remove('fade-out');
+      
+      setTimeout(() => {
+        intro.classList.add('fade-out');
+      }, 2400); // Esconde a intro após 2.4s
+    }
+
+    function replayIntro() {
+      window.scrollTo(0, 0);
+      runIntro();
+    }
+
+    // Inicia a intro assim que a página carrega
+    window.addEventListener('DOMContentLoaded', runIntro);
+  </script>
 
 </body>
 </html>
